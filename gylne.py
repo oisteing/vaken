@@ -16,11 +16,11 @@ bg_image_base64 = get_base64_image(bg_image_path)
 # --- Sett opp side ---
 st.set_page_config(page_title="Golden ways", layout="wide")
 
-# --- Legg inn CSS for bakgrunn, knapper, tekstboks og mobiljusteringer ---
+# --- Global CSS (uten absolutt posisjonering av knapper) ---
 st.markdown(
     f"""
     <style>
-      /* Bakgrunnsbilde for hele appen */
+      /* Bakgrunn */
       .stApp {{
         background-image: url("data:image/png;base64,{bg_image_base64}");
         background-size: cover;
@@ -31,74 +31,18 @@ st.markdown(
       /* Fjern grå "tap"-blink på mobil */
       * {{ -webkit-tap-highlight-color: rgba(0,0,0,0); }}
 
-      /* Sentral beholder for setning */
-      .container {{
-        position: absolute; top: 70px; left: 0; right: 0; bottom: 0;
-        display: flex; justify-content: center; align-items: center; z-index: 10;
-      }}
-      .sentence-box {{
-        border: 2px solid #333;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        font-size: 24px;
-        text-align: center;
-        max-width: 80%;
-        background-color: rgba(249, 249, 249, 0.85);
-        border-radius: 8px;
-        color: #333 !important;
-      }}
-
-      /* Knappestabler på desktop (absolutt posisjon) */
-      .stButton, .copy-btn {{
-        position: absolute;
-        top: 70px;
-        z-index: 2000; /* over sentence-box */
-      }}
-      .stButton {{ left: 20px; }}
-      .copy-btn {{ left: 200px; }}
-
-      /* Tving knappeutseende (alle tilstander) */
-      .stButton > button,
-      .stButton > button:focus,
-      .stButton > button:active,
-      .stButton > button:hover {{
+      /* Knappestil (gjeld begge) */
+      .top-btn > button,
+      .top-btn > button:focus,
+      .top-btn > button:active,
+      .top-btn > button:hover {{
         background: #ffffff !important;
         color: #333 !important;
         border: 2px solid #333 !important;
         opacity: 1 !important;
         box-shadow: none !important;
-      }}
-
-      .copy-btn > button,
-      .copy-btn > button:focus,
-      .copy-btn > button:active,
-      .copy-btn > button:hover {{
-        background: #ffffff !important;
-        color: #333 !important;
-        border: 2px solid #333 !important;
-        padding: 10px 20px;
-        font-size: 18px;
-        cursor: pointer;
-        border-radius: 4px;
-        opacity: 1 !important;
-        box-shadow: none !important;
-      }}
-
-      /* ---- FIX mot vertikal/smal knapp på PC ---- */
-      /* Sørg for at wrapperen ikke komprimeres til smal bredde */
-      .stButton {{
-        display: inline-block !important;
-        width: auto !important;
-      }}
-      /* Tving horisontal tekst og ingen linjebryting + min bredde */
-      .stButton > button,
-      .stButton > button:focus,
-      .stButton > button:active,
-      .stButton > button:hover {{
-        writing-mode: horizontal-tb !important;
         white-space: nowrap !important;
         word-break: keep-all !important;
-        width: auto !important;
         min-width: 140px !important;
         height: auto !important;
         display: inline-flex !important;
@@ -106,35 +50,50 @@ st.markdown(
         justify-content: center;
         padding: 10px 20px !important;
         border-radius: 6px !important;
+        font-size: 18px !important;
         line-height: 1.2 !important;
       }}
-      /* Samme sikring for kopier-knappen */
-      .copy-btn > button {{
-        white-space: nowrap !important;
-        min-width: 120px !important;
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        line-height: 1.2 !important;
-      }}
-      /* ------------------------------------------- */
 
-      /* Mobiljusteringer */
+      /* Kopi-knappen laget i HTML/JS */
+      .copy-btn > button {{
+        background: #ffffff;
+        color: #333;
+        border: 2px solid #333;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 6px;
+        white-space: nowrap;
+        min-width: 120px;
+      }}
+
+      /* Sentral boks for setningen */
+      .center-wrap {{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;        /* gir plass under knappene */
+        padding: 2rem 1rem;
+      }}
+      .sentence-box {{
+        border: 2px solid #333;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        text-align: center;
+        max-width: 900px;
+        background-color: rgba(249, 249, 249, 0.85);
+        border-radius: 8px;
+        color: #333 !important;
+      }}
+
       @media (max-width: 600px) {{
-        .stButton, .copy-btn {{
-          position: relative !important;
-          top: 0 !important;
-          left: 0 !important;
-          margin: 10px auto;
-          display: block;
-          z-index: 2000; /* behold overlegg */
-        }}
-        .stButton > button, .copy-btn > button {{
-          width: 90%;
+        .top-btn > button, .copy-btn > button {{
+          width: 100%;
           box-sizing: border-box;
-          background: rgba(255,255,255,0.98) !important; /* mer dekkende over bakgrunn */
+          background: rgba(255,255,255,0.98);
         }}
-        .container {{ top: 200px !important; }}
+        .center-wrap {{ min-height: 60vh; }}
       }}
     </style>
     """,
@@ -151,38 +110,37 @@ sentences = load_sentences()
 if "sentence" not in st.session_state:
     st.session_state.sentence = random.choice(sentences)
 
-# «Nytt tema»-knapp
-if st.button("Nytt tema"):
-    st.session_state.sentence = random.choice(sentences)
+# ---- TOPP: to kolonner med knapper (ingen absolutte posisjoner) ----
+col1, col2 = st.columns([1, 1])
 
-# «Kopier»-knapp via komponent med JS som kopierer kun setningen
-safe_sentence = json.dumps(st.session_state.sentence)
-components.html(
-    f"""
-    <div class="copy-btn">
-      <button id="copy-btn">Kopier</button>
-    </div>
-    <script>
-      const text = {safe_sentence};
-      const btn = document.getElementById('copy-btn');
-      btn.onclick = () => {{
-        navigator.clipboard.writeText(text);
-        btn.innerText = 'Kopiert!';
-        setTimeout(() => btn.innerText = 'Kopier', 1500);
-      }};
-    </script>
-    """,
-    height=60,
-)
+with col1:
+    # gi Streamlit-knappen en wrapper-klasse for styling
+    btn_placeholder = st.empty()
+    with btn_placeholder.container():
+        # Bruk standard st.button, men gi parent en klasse via markdown-hack
+        st.markdown('<div class="top-btn">', unsafe_allow_html=True)
+        if st.button("Nytt tema", key="nytt_tema"):
+            st.session_state.sentence = random.choice(sentences)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Render setningsboksen
-st.markdown(
-    f"""
-    <div class="container">
-      <div class="sentence-box">
-        {st.session_state.sentence}
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+with col2:
+    safe_sentence = json.dumps(st.session_state.sentence)
+    components.html(
+        f"""
+        <div class="copy-btn" style="display:flex; justify-content:flex-start;">
+          <button id="copy-btn">Kopier</button>
+        </div>
+        <script>
+          const text = {safe_sentence};
+          const btn = document.getElementById('copy-btn');
+          btn.onclick = () => {{
+            navigator.clipboard.writeText(text);
+            btn.innerText = 'Kopiert!';
+            setTimeout(() => btn.innerText = 'Kopier', 1500);
+          }};
+        </script>
+        """,
+        height=60,
+    )
+
+# ---- SENTRAL TEKST
