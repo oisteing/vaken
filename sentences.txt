@@ -6,12 +6,13 @@ Hvilken følelse fra barndommen skulle du ønske at du kunne gjenoppleve?
 Hvor vil du helst vi skal kysse?
 Hva er en god opplevelse?
 Hvilke ingredienser må med for at man skal skape gode minner?
-Hva er det mest attraktive en av ditt foretrukne kjønn kan gjøre?
+Hva er det mest attraktive en mann kan gjøre for deg?
 Hva er det modigste du har gjort?
 Hva inspirerer deg mest i livet akkurat nå?
 Hva er det beste rådet du noen gang har fått?
 Hva er den beste boka du har lest?
 Hva er du veldig fascinert av?
+Hva er det beste vi har gjort saman?
 Hvilket fag var ditt beste på skolen?
 Hva er det snilleste jeg noen gang har gjort for deg?
 Er det noe du enda ikke har turt å spørre meg om?
@@ -37,4 +38,3 @@ Hva er noe du har gjort som du er veldig stolt av, men som kanskje få vet om?
 Hvis du fikk et gavekort på én opplevelse – konsert, kurs, reise eller lignende – hva ville du valgt?
 Hva setter du mest pris på i en helt vanlig hverdagsmorgen?
 Er det noe du mener at jeg fortsatt misforstår ved deg?
-
