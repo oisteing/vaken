@@ -28,49 +28,12 @@ st.markdown(
         background-attachment: fixed;
       }}
 
-      /* Nytt tema-knapp på desktop */
-      .stButton {{
-        position: absolute;
-        top: 70px;
-        left: 20px;
-        z-index: 1000;
-      }}
-      .stButton > button {{
-        background-color: white;
-        color: #333;
-        border: 2px solid #333;
-        padding: 10px 20px;
-        font-size: 18px;
-        cursor: pointer;
-        border-radius: 4px;
-      }}
+      /* Fjern grå "tap"-blink på mobil */
+      * {{ -webkit-tap-highlight-color: rgba(0,0,0,0); }}
 
-      /* Kopi-knapp på desktop */
-      .copy-btn {{
-        position: absolute;
-        top: 70px;
-        left: 200px; /* juster etter knappens bredde */
-        z-index: 1000;
-      }}
-      .copy-btn > button {{
-        background-color: white;
-        color: #333;
-        border: 2px solid #333;
-        padding: 10px 20px;
-        font-size: 18px;
-        cursor: pointer;
-        border-radius: 4px;
-      }}
-
-      /* Sentral beholder for setning */
-      .container {{
-        position: absolute;
-        top: 70px;
-        left: 0; right: 0; bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }}
+      /* Sørg for at setningsboksen ikke legger seg over knappene */
+      .container {{ position: absolute; top: 70px; left: 0; right: 0; bottom: 0; 
+                    display: flex; justify-content: center; align-items: center; z-index: 10; }}
       .sentence-box {{
         border: 2px solid #333;
         padding: 20px;
@@ -78,13 +41,48 @@ st.markdown(
         font-size: 24px;
         text-align: center;
         max-width: 80%;
-        background-color: rgba(249, 249, 249, 0.8);
+        background-color: rgba(249, 249, 249, 0.85);
         border-radius: 8px;
-        z-index: 1000;
         color: #333 !important;
       }}
 
-      /* Mobiljusteringer for skjermer inntil 600px brede */
+      /* Knappestabler på desktop (absolutt posisjon) */
+      .stButton, .copy-btn {{
+        position: absolute;
+        top: 70px;
+        z-index: 2000; /* over sentence-box */
+      }}
+      .stButton {{ left: 20px; }}
+      .copy-btn {{ left: 200px; }}
+
+      /* Tving knappeutseende (alle tilstander) */
+      .stButton > button,
+      .stButton > button:focus,
+      .stButton > button:active,
+      .stButton > button:hover {{
+        background: #ffffff !important;
+        color: #333 !important;
+        border: 2px solid #333 !important;
+        opacity: 1 !important;
+        box-shadow: none !important;
+      }}
+
+      .copy-btn > button,
+      .copy-btn > button:focus,
+      .copy-btn > button:active,
+      .copy-btn > button:hover {{
+        background: #ffffff !important;
+        color: #333 !important;
+        border: 2px solid #333 !important;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 4px;
+        opacity: 1 !important;
+        box-shadow: none !important;
+      }}
+
+      /* Mobiljusteringer */
       @media (max-width: 600px) {{
         .stButton, .copy-btn {{
           position: relative !important;
@@ -92,19 +90,20 @@ st.markdown(
           left: 0 !important;
           margin: 10px auto;
           display: block;
+          z-index: 2000; /* behold overlegg */
         }}
         .stButton > button, .copy-btn > button {{
           width: 90%;
           box-sizing: border-box;
+          background: rgba(255,255,255,0.98) !important; /* litt mer dekkende over bakgrunnen */
         }}
-        .container {{
-          top: 200px !important; /* header + 2 knapper + margin */
-        }}
+        .container {{ top: 200px !important; }}
       }}
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 @st.cache_data
 def load_sentences(path="sentences.txt"):
@@ -151,3 +150,4 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
