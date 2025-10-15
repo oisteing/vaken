@@ -1,0 +1,70 @@
+import random
+import streamlit as st
+
+# Sidekonfigurasjon
+st.set_page_config(page_title="Tilfeldig setning", layout="centered")
+
+@st.cache_data
+def load_sentences(path="sentences.txt"):
+    with open(path, encoding="utf-8") as f:
+        return [l.strip() for l in f if l.strip()]
+
+sentences = load_sentences()
+
+if "sentence" not in st.session_state:
+    st.session_state.sentence = random.choice(sentences)
+
+if st.button("Ny setning"):
+    st.session_state.sentence = random.choice(sentences)
+
+st.markdown("""
+    <style>
+      /* Knapp: flyttet litt lenger opp */
+      .stButton {
+        position: absolute;
+        top: 40px;   /* var 80px, nå 60px */
+        left: 20px;
+        z-index: 1000;
+      }
+      .stButton > button {
+        background-color: white !important;
+        color: #333 !important;
+        border: 2px solid #333 !important;
+        padding: 10px 20px !important;
+        font-size: 18px !important;
+        border-radius: 4px !important;
+      }
+
+      /* Bokscontainer: flyttet lenger ned */
+      .container {
+        position: absolute;
+        top: 160px;   /* var 120px, nå 160px */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .sentence-box {
+        border: 2px solid #333;
+        background-color: #f9f9f9;
+        color: #333 !important;
+        padding: 20px;
+        font-size: 1.5rem;
+        text-align: center;
+        max-width: 90%;
+        border-radius: 8px;
+        word-wrap: break-word;
+      }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown(f"""
+    <div class="container">
+      <div class="sentence-box">
+        {st.session_state.sentence}
+      </div>
+    </div>
+""", unsafe_allow_html=True)
