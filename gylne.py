@@ -31,9 +31,11 @@ st.markdown(
       /* Fjern grå "tap"-blink på mobil */
       * {{ -webkit-tap-highlight-color: rgba(0,0,0,0); }}
 
-      /* Sørg for at setningsboksen ikke legger seg over knappene */
-      .container {{ position: absolute; top: 70px; left: 0; right: 0; bottom: 0; 
-                    display: flex; justify-content: center; align-items: center; z-index: 10; }}
+      /* Sentral beholder for setning */
+      .container {{
+        position: absolute; top: 70px; left: 0; right: 0; bottom: 0;
+        display: flex; justify-content: center; align-items: center; z-index: 10;
+      }}
       .sentence-box {{
         border: 2px solid #333;
         padding: 20px;
@@ -82,6 +84,41 @@ st.markdown(
         box-shadow: none !important;
       }}
 
+      /* ---- FIX mot vertikal/smal knapp på PC ---- */
+      /* Sørg for at wrapperen ikke komprimeres til smal bredde */
+      .stButton {{
+        display: inline-block !important;
+        width: auto !important;
+      }}
+      /* Tving horisontal tekst og ingen linjebryting + min bredde */
+      .stButton > button,
+      .stButton > button:focus,
+      .stButton > button:active,
+      .stButton > button:hover {{
+        writing-mode: horizontal-tb !important;
+        white-space: nowrap !important;
+        word-break: keep-all !important;
+        width: auto !important;
+        min-width: 140px !important;
+        height: auto !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px !important;
+        border-radius: 6px !important;
+        line-height: 1.2 !important;
+      }}
+      /* Samme sikring for kopier-knappen */
+      .copy-btn > button {{
+        white-space: nowrap !important;
+        min-width: 120px !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.2 !important;
+      }}
+      /* ------------------------------------------- */
+
       /* Mobiljusteringer */
       @media (max-width: 600px) {{
         .stButton, .copy-btn {{
@@ -95,7 +132,7 @@ st.markdown(
         .stButton > button, .copy-btn > button {{
           width: 90%;
           box-sizing: border-box;
-          background: rgba(255,255,255,0.98) !important; /* litt mer dekkende over bakgrunnen */
+          background: rgba(255,255,255,0.98) !important; /* mer dekkende over bakgrunn */
         }}
         .container {{ top: 200px !important; }}
       }}
@@ -103,7 +140,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 
 @st.cache_data
 def load_sentences(path="sentences.txt"):
@@ -150,4 +186,3 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
