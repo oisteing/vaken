@@ -143,4 +143,14 @@ with col2:
         height=60,
     )
 
-# ---- SENTRAL TEKST
+# ---- SENTRAL TEKSTBOKS ----
+st.markdown(
+    f"""
+    <div class="center-wrap">
+      <div class="sentence-box">
+        {st.session_state.sentence}
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
